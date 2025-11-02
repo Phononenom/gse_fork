@@ -683,7 +683,9 @@ int Local_Storage::get_data(std::string folder, std::string file, char *data, un
         folder.append(PATH_SEPARATOR);
     }
 
-    std::string full_path(save_directory + appid + folder + file);
+    std::string full_path;
+    full_path.reserve(save_directory.size() + appid.size() + folder.size() + file.size());
+    full_path.append(save_directory).append(appid).append(folder).append(file);
     return get_file_data(full_path, data, max_length, offset);
 }
 
@@ -717,7 +719,9 @@ bool Local_Storage::file_exists(std::string folder, std::string file)
         folder.append(PATH_SEPARATOR);
     }
 
-    std::string full_path(save_directory + appid + folder + file);
+    std::string full_path;
+    full_path.reserve(save_directory.size() + appid.size() + folder.size() + file.size());
+    full_path.append(save_directory).append(appid).append(folder).append(file);
     return file_exists_(full_path);
 }
 
@@ -728,7 +732,9 @@ unsigned int Local_Storage::file_size(std::string folder, std::string file)
         folder.append(PATH_SEPARATOR);
     }
 
-    std::string full_path(save_directory + appid + folder + file);
+    std::string full_path;
+    full_path.reserve(save_directory.size() + appid.size() + folder.size() + file.size());
+    full_path.append(save_directory).append(appid).append(folder).append(file);
     return file_size_(full_path);
 }
 
@@ -739,7 +745,9 @@ bool Local_Storage::file_delete(std::string folder, std::string file)
         folder.append(PATH_SEPARATOR);
     }
 
-    std::string full_path(save_directory + appid + folder + file);
+    std::string full_path;
+    full_path.reserve(save_directory.size() + appid.size() + folder.size() + file.size());
+    full_path.append(save_directory).append(appid).append(folder).append(file);
 #if defined(STEAM_WIN32)
     return _wremove(utf8_decode(full_path).c_str()) == 0;
 #else
@@ -754,7 +762,9 @@ uint64_t Local_Storage::file_timestamp(std::string folder, std::string file)
         folder.append(PATH_SEPARATOR);
     }
 
-    std::string full_path(save_directory + appid + folder + file);
+    std::string full_path;
+    full_path.reserve(save_directory.size() + appid.size() + folder.size() + file.size());
+    full_path.append(save_directory).append(appid).append(folder).append(file);
 
 #if defined(STEAM_WIN32)
     struct _stat buffer = {};
@@ -802,8 +812,14 @@ bool Local_Storage::update_save_filenames(std::string folder)
             store_data(folder, to, (char *)"", 0);
             file_delete(folder, to);
 
-            std::string from(save_directory + appid + folder + PATH_SEPARATOR + path);
-            to = save_directory + appid + folder + PATH_SEPARATOR + to;
+            std::string from;
+            from.reserve(save_directory.size() + appid.size() + folder.size() + PATH_SEPARATOR.size() + path.size());
+            from.append(save_directory).append(appid).append(folder).append(PATH_SEPARATOR).append(path);
+            
+            to.clear();
+            to.reserve(save_directory.size() + appid.size() + folder.size() + PATH_SEPARATOR.size() + to.size());
+            std::string to_temp = to;
+            to.append(save_directory).append(appid).append(folder).append(PATH_SEPARATOR).append(to_temp);
             PRINT_DEBUG("renaming '%s' to '%s'", from.c_str(), to.c_str());
             if (std::rename(from.c_str(), to.c_str()) < 0) {
                 PRINT_DEBUG("ERROR RENAMING");

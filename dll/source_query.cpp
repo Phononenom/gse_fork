@@ -204,9 +204,10 @@ std::vector<uint8_t> Source_Query::handle_source_query(const void* buffer, size_
 
                 serialize_response(output_buffer, source_query_magic::simple);
                 serialize_response(output_buffer, source_response_header::A2S_PLAYER);
-                serialize_response(output_buffer, static_cast<uint8_t>(players.size())); // num_players
+                const auto num_players = players.size();
+                serialize_response(output_buffer, static_cast<uint8_t>(num_players)); // num_players
 
-                for (unsigned i = 0; i < players.size(); ++i) {
+                for (unsigned i = 0; i < num_players; ++i) {
                     serialize_response(output_buffer, static_cast<uint8_t>(i)); // player index
                     serialize_response(output_buffer, players[i].second.name); // player name
                     serialize_response(output_buffer, players[i].second.score); // player score

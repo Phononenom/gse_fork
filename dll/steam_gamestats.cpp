@@ -556,7 +556,8 @@ void Steam_GameStats::save_session_to_disk(Steam_GameStats::Session_t &session, 
 
         // save rows attributes
         auto &jthis_table = jout["tables"][table_name];
-        for (size_t row_idx = 0; row_idx < table_data.rows.size(); ++row_idx) {
+        const auto num_rows = table_data.rows.size();
+        for (size_t row_idx = 0; row_idx < num_rows; ++row_idx) {
             const auto &row = table_data.rows[row_idx];
             auto &jthis_row = jthis_table[row_idx];
             for (const auto& [att_name, att_val] : row.attributes) {

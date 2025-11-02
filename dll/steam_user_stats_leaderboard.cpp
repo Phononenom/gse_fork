@@ -498,7 +498,8 @@ bool Steam_User_Stats::GetDownloadedLeaderboardEntry( SteamLeaderboardEntries_t 
     }
     
     if (pDetails && cDetailsMax > 0) {
-        for (unsigned i = 0; i < target_entry.score_details.size() && i < static_cast<unsigned>(cDetailsMax); ++i) {
+        const auto num_details = std::min(target_entry.score_details.size(), static_cast<size_t>(cDetailsMax));
+        for (unsigned i = 0; i < num_details; ++i) {
             pDetails[i] = target_entry.score_details[i];
         }
     }

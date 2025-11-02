@@ -203,7 +203,14 @@ bool Steam_Inventory::GetResultItems( SteamInventoryResult_t resultHandle,
         if (request->full_query) {
             *punOutItemsArraySize = static_cast<uint32>(user_items.size());
         } else {
-            *punOutItemsArraySize = static_cast<uint32>(std::count_if(request->instance_ids.begin(), request->instance_ids.end(), [this](SteamItemInstanceID_t item_id){ return user_items.find(std::to_string(item_id)) != user_items.end();}));
+            // Count matching items efficiently by iterating once
+            uint32 count = 0;
+            for (const auto &itemid : request->instance_ids) {
+                if (user_items.find(std::to_string(itemid)) != user_items.end()) {
+                    ++count;
+                }
+            }
+            *punOutItemsArraySize = count;
         }
     }
 

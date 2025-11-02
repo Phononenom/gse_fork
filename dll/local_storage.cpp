@@ -816,10 +816,10 @@ bool Local_Storage::update_save_filenames(std::string folder)
             from.reserve(save_directory.size() + appid.size() + folder.size() + PATH_SEPARATOR.size() + path.size());
             from.append(save_directory).append(appid).append(folder).append(PATH_SEPARATOR).append(path);
             
-            std::string to_temp = to;
+            std::string to_filename = std::move(to);
             to.clear();
-            to.reserve(save_directory.size() + appid.size() + folder.size() + PATH_SEPARATOR.size() + to_temp.size());
-            to.append(save_directory).append(appid).append(folder).append(PATH_SEPARATOR).append(to_temp);
+            to.reserve(save_directory.size() + appid.size() + folder.size() + PATH_SEPARATOR.size() + to_filename.size());
+            to.append(save_directory).append(appid).append(folder).append(PATH_SEPARATOR).append(to_filename);
             PRINT_DEBUG("renaming '%s' to '%s'", from.c_str(), to.c_str());
             if (std::rename(from.c_str(), to.c_str()) < 0) {
                 PRINT_DEBUG("ERROR RENAMING");
